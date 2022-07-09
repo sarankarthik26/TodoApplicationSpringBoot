@@ -1,5 +1,8 @@
 package com.example.todo.view;
 
+import com.example.todo.todos.Repository.Todo;
+import com.example.todo.todos.Repository.TodoRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -21,11 +24,30 @@ public class TodoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private TodoRepository todoRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        todoRepository.deleteAll();
+    }
+
     @Test
     void shouldReturnUsername() throws Exception {
         mockMvc.perform(get("/username")
                         .with(httpBasic("saran", "saran")))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"username\":\"saran\"}"));
+    }
+
+    @Test
+    void shouldReturnAllTodos() throws Exception {
+        Todo testTodo = new Todo(1L, "TestTodo-1", false);
+        todoRepository.save(testTodo);
+
+        mockMvc.perform(get("/todos")
+                        .with(httpBasic("saran", "saran")))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"id\":1,\"todoName\":\"TestTodo-1\",\"isDone\":false}]"));
     }
 }
