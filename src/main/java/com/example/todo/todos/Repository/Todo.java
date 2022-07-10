@@ -18,7 +18,7 @@ public class Todo {
     @Column(name = "todo_name")
     private String todoName;
 
-    @JsonProperty
+    @JsonProperty(value = "isDone")
     @NotNull
     @Column(name = "is_done", columnDefinition = "BIT")
     private boolean isDone;
@@ -26,9 +26,9 @@ public class Todo {
     public Todo() {
     }
 
-    public Todo(String todoName, boolean isDone) {
+    public Todo(String todoName) {
         this.todoName = todoName;
-        this.isDone = isDone;
+        this.isDone = false;
     }
 
     public Todo(Long id, String todoName, boolean isDone) {
@@ -53,12 +53,13 @@ public class Todo {
         this.todoName = todoName;
     }
 
+    @JsonProperty(value = "isDone")
     public boolean isDone() {
         return isDone;
     }
 
-    public void setDone(boolean done) {
-        isDone = done;
+    public void setIsDone(boolean isDone) {
+        this.isDone = isDone;
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -28,6 +30,11 @@ public class TodoController {
     @GetMapping("/todos")
     List<Todo> getTodos(){
         return todoService.getAllTodos();
+    }
+
+    @PostMapping("/todos")
+    Todo addTodo(@RequestBody Todo todoToBeAdded){
+        return todoService.addTodo(todoToBeAdded);
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 public class TodoRepositoryTest {
@@ -17,8 +18,8 @@ public class TodoRepositoryTest {
     @Autowired
     private TodoRepository todoRepository;
 
-    private Todo testTodo1 = new Todo(1L, "Todo test 1", false);
-    private Todo testTodo2 = new Todo(2L, "Todo test 2", true);
+    private Todo testTodo1 = new Todo("Test Todo 1");
+    private Todo testTodo2 = new Todo("Test Todo 2");
 
     @BeforeEach
     public void beforeAll() {
@@ -29,7 +30,20 @@ public class TodoRepositoryTest {
 
     @Test
     void shouldReturnAllTodosFromRepository() {
-        assertThat(todoRepository.findAll().size()).isEqualTo(2);
-        assertThat(todoRepository.findAll()).isEqualTo(List.of(testTodo1, testTodo2));
+        List<Todo> allTodos = todoRepository.findAll();
+
+        assertThat(allTodos.size()).isEqualTo(2);
+        assertThat(allTodos).isEqualTo(List.of(testTodo1, testTodo2));
+    }
+
+    @Test
+    void shouldSaveTodo() {
+        Todo testTodo3 = new Todo("Test Todo 3");
+
+        todoRepository.save(testTodo3);
+
+        List<Todo> allTodos = todoRepository.findAll();
+        assertThat(allTodos.size()).isEqualTo(3);
+        assertTrue(allTodos.contains(new Todo(3L, "Test Todo 3", false)));
     }
 }

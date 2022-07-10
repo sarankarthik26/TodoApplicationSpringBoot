@@ -31,4 +31,13 @@ public class TodoServiceTest {
         assertThat(todoService.getAllTodos()).isEqualTo(List.of(todo1, todo2));
         verify(todoRepository, times(1)).findAll();
     }
+
+    @Test
+    void shouldAddTodoIntoTheRepo() {
+        Todo testTodo = new Todo(1L, "Todo1", false);
+        when(todoRepository.save(testTodo)).thenReturn(testTodo);
+
+        assertThat(todoService.addTodo(testTodo)).isEqualTo(testTodo);
+        verify(todoRepository, times(1)).save(testTodo);
+    }
 }
