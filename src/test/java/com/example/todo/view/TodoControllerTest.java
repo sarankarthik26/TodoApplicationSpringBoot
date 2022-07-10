@@ -15,8 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,5 +89,21 @@ public class TodoControllerTest {
                         .with(httpBasic("saran", "saran")))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{\"message\":\"Todo does not exist for the given ID\",\"details\":[]}"));
+    }
+
+    @Test
+    @Order(6)
+    void shouldDeleteTodoUsingItsId() throws Exception {
+        mockMvc.perform(delete("/todos/3")
+                        .with(httpBasic("saran", "saran")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(7)
+    void shouldNotThrowErrorWhenDeletingTodoThatDoesNotExist() throws Exception {
+        mockMvc.perform(delete("/todos/10")
+                        .with(httpBasic("saran", "saran")))
+                .andExpect(status().isOk());
     }
 }

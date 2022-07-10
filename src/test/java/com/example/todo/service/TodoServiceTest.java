@@ -50,4 +50,25 @@ public class TodoServiceTest {
         assertThat(todoService.getTodoFromTodoId(1L)).isEqualTo(Optional.of(testTodo));
         verify(todoRepository, times(1)).findById(1L);
     }
+
+    @Test
+    void shouldDeleteTodoUsingTodoId() {
+        when(todoRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(todoRepository).deleteById(1L);
+
+        todoService.deleteTodoUsingId(1L);
+
+        verify(todoRepository, times(1)).existsById(1L);
+        verify(todoRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void shouldNotHitRepoWhileDeletingTodoWhichDoesNotExist() {
+        when(todoRepository.existsById(1L)).thenReturn(false);
+
+        todoService.deleteTodoUsingId(1L);
+
+        verify(todoRepository, times(1)).existsById(1L);
+        verify(todoRepository, times(0)).deleteById(1L);
+    }
 }

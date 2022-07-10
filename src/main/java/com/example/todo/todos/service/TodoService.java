@@ -29,4 +29,10 @@ public class TodoService {
     public Optional<Todo> getTodoFromTodoId(Long todoId) {
         return todoRepository.findById(todoId);
     }
+
+    public void deleteTodoUsingId(Long todoId) {
+        if (todoRepository.existsById(todoId)) {
+            todoRepository.deleteById(todoId);
+        }
+    }
 }

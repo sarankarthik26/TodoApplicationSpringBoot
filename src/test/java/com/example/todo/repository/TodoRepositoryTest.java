@@ -67,4 +67,16 @@ public class TodoRepositoryTest {
 
         assertTrue(queriedTodo.isEmpty());
     }
+
+    @Test
+    @Order(5)
+    void shouldDeleteTodoUsingId() {
+        assertThat(todoRepository.findAll().size()).isEqualTo(2);
+
+        todoRepository.deleteById(2L);
+
+        assertThat(todoRepository.findAll().size()).isEqualTo(1);
+        assertTrue(todoRepository.findById(2L).isEmpty());
+    }
+
 }
