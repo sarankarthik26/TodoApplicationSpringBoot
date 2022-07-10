@@ -106,4 +106,15 @@ public class TodoControllerTest {
                         .with(httpBasic("saran", "saran")))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @Order(8)
+    void shouldUpdateTodoIsDoneUsingID() throws Exception {
+        mockMvc.perform(patch("/todos/2")
+                        .with(httpBasic("saran", "saran"))
+                        .contentType("application/json")
+                        .content("{\"isDone\":true}"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":true}"));
+    }
 }

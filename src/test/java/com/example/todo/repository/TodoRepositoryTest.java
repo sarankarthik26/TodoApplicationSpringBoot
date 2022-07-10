@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
@@ -79,4 +80,19 @@ public class TodoRepositoryTest {
         assertTrue(todoRepository.findById(2L).isEmpty());
     }
 
+    @Test
+    @Order(6)
+    void shouldUpdateTodoWithoutCreatingNewRow() {
+        Todo todoBeforeUpdating = todoRepository.findById(2L).get();
+        assertFalse(todoBeforeUpdating.isDone());
+        assertThat(todoRepository.findAll().size()).isEqualTo(2);
+
+        todoBeforeUpdating.setIsDone(true);
+        todoRepository.save(todoBeforeUpdating);
+
+        Todo todoAfterUpdating = todoRepository.findById(2L).get();
+        assertTrue(todoAfterUpdating.isDone());
+        assertThat(todoRepository.findAll().size()).isEqualTo(2);
+
+    }
 }

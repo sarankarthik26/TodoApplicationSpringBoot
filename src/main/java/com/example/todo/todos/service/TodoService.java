@@ -1,11 +1,13 @@
 package com.example.todo.todos.service;
 
+import com.example.todo.exceptions.TodoNotFoundException;
 import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.Repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -34,5 +36,17 @@ public class TodoService {
         if (todoRepository.existsById(todoId)) {
             todoRepository.deleteById(todoId);
         }
+    }
+
+    public Todo updateTodo(Long todoId, Map<String, Boolean> request) throws TodoNotFoundException {
+        Optional<Todo> queriedTodo = todoRepository.findById(todoId);
+        if (queriedTodo.isEmpty()) throw new TodoNotFoundException();
+        Todo todo = queriedTodo.get();
+
+        if (request.containsKey("isDone")) {
+            todo.setIsDone(request.get("isDone"));
+        }
+        todoRepository.save(todo);
+        return todo;
     }
 }

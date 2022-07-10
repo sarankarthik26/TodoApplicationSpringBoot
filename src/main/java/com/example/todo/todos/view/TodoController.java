@@ -48,4 +48,9 @@ public class TodoController {
         todoService.deleteTodoUsingId((long) todoId);
     }
 
+    @PatchMapping("/todos/{todoId}")
+    Todo updateTodoUsingTodoId(@PathVariable int todoId, @RequestBody Map<String, Boolean> request) throws TodoNotFoundException {
+        return todoService.updateTodo((long) todoId, request);
+    }
+
 }

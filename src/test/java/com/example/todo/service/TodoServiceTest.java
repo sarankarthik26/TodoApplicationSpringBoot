@@ -1,15 +1,19 @@
 package com.example.todo.service;
 
+import com.example.todo.exceptions.TodoNotFoundException;
 import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.Repository.TodoRepository;
 import com.example.todo.todos.service.TodoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class TodoServiceTest {
@@ -70,5 +74,35 @@ public class TodoServiceTest {
 
         verify(todoRepository, times(1)).existsById(1L);
         verify(todoRepository, times(0)).deleteById(1L);
+    }
+
+    @Test
+    void shouldUpdateIsDoneForTodo() throws TodoNotFoundException {
+        HashMap<String, Boolean> testRequest = new HashMap<>();
+        testRequest.put("isDone", true);
+        Todo testTodo = new Todo(1L, "Todo1", false);
+        Todo updatedTodo = new Todo(1L, "Todo1", false);
+
+        when(todoRepository.findById(1L)).thenReturn(Optional.of(testTodo));
+        when(todoRepository.save(updatedTodo)).thenReturn(updatedTodo);
+
+        todoService.updateTodo(1L, testRequest);
+
+        assertTrue(testTodo.isDone());
+        verify(todoRepository, times(1)).findById(1L);
+        verify(todoRepository, times(1)).save(updatedTodo);
+    }
+
+    @Test
+    void shouldThrowErrorWhenTodoIdDoesNotExist() {
+        HashMap<String, Boolean> testRequest = new HashMap<>();
+
+        when(todoRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(TodoNotFoundException.class, () -> todoService.updateTodo(1L, testRequest));
+
+        verify(todoRepository, times(1)).findById(1L);
+        verify(todoRepository, times(0)).save(any(Todo.class));
+
     }
 }
