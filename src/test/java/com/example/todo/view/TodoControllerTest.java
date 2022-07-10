@@ -73,4 +73,22 @@ public class TodoControllerTest {
         assertThat(todoRepository.findAll().size()).isEqualTo(3);
         assertTrue(todoRepository.findAll().contains(new Todo(3L, "TestTodo-3", false)));
     }
+
+    @Test
+    @Order(4)
+    void shouldGetTodoUsingItsId() throws Exception {
+        mockMvc.perform(get("/todos/1")
+                        .with(httpBasic("saran", "saran")))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"id\":1,\"todoName\":\"TestTodo-1\",\"isDone\":false}"));
+    }
+
+    @Test
+    @Order(5)
+    void shouldThrowErrorWhenTodoDoesNotExist() throws Exception {
+        mockMvc.perform(get("/todos/4")
+                        .with(httpBasic("saran", "saran")))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{\"message\":\"Todo does not exist for the given ID\",\"details\":[]}"));
+    }
 }

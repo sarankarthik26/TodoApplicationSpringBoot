@@ -2,26 +2,28 @@ package com.example.todo.repository;
 
 import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.Repository.TodoRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TodoRepositoryTest {
 
     @Autowired
     private TodoRepository todoRepository;
 
-    private Todo testTodo1 = new Todo("Test Todo 1");
-    private Todo testTodo2 = new Todo("Test Todo 2");
+    private final Todo testTodo1 = new Todo(1L, "Test Todo 1", false);
+    private final Todo testTodo2 = new Todo(2L, "Test Todo 2", false);
 
-    @BeforeEach
+    @BeforeAll
     public void beforeAll() {
         todoRepository.deleteAll();
         todoRepository.save(testTodo1);
@@ -29,6 +31,7 @@ public class TodoRepositoryTest {
     }
 
     @Test
+    @Order(1)
     void shouldReturnAllTodosFromRepository() {
         List<Todo> allTodos = todoRepository.findAll();
 
@@ -37,6 +40,7 @@ public class TodoRepositoryTest {
     }
 
     @Test
+    @Order(2)
     void shouldSaveTodo() {
         Todo testTodo3 = new Todo("Test Todo 3");
 
@@ -45,5 +49,22 @@ public class TodoRepositoryTest {
         List<Todo> allTodos = todoRepository.findAll();
         assertThat(allTodos.size()).isEqualTo(3);
         assertTrue(allTodos.contains(new Todo(3L, "Test Todo 3", false)));
+    }
+
+    @Test
+    @Order(3)
+    void shouldGetTodoFromTodoId() {
+        Optional<Todo> queriedTodo = todoRepository.findById(1L);
+
+        assertTrue(queriedTodo.isPresent());
+        assertThat(queriedTodo.get()).isEqualTo(new Todo(1L, "Test Todo 1", false));
+    }
+
+    @Test
+    @Order(4)
+    void shouldBeNullWhenTodoIdDoesNotExist() {
+        Optional<Todo> queriedTodo = todoRepository.findById(3L);
+
+        assertTrue(queriedTodo.isEmpty());
     }
 }

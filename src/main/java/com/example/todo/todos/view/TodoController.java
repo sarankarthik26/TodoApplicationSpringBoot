@@ -1,17 +1,16 @@
 package com.example.todo.todos.view;
 
+import com.example.todo.exceptions.TodoNotFoundException;
 import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class TodoController {
@@ -28,13 +27,20 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    List<Todo> getTodos(){
+    List<Todo> getTodos() {
         return todoService.getAllTodos();
     }
 
     @PostMapping("/todos")
-    Todo addTodo(@RequestBody Todo todoToBeAdded){
+    Todo addTodo(@RequestBody Todo todoToBeAdded) {
         return todoService.addTodo(todoToBeAdded);
+    }
+
+    @GetMapping("/todos/{todoId}")
+    Todo getTodoUsingTodoId(@PathVariable Long todoId) throws TodoNotFoundException {
+        Optional<Todo> queriedTodo = todoService.getTodoFromTodoId(todoId);
+        if (queriedTodo.isEmpty()) throw new TodoNotFoundException();
+        return queriedTodo.get();
     }
 
 }

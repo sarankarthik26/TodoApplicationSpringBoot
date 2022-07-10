@@ -14,8 +14,7 @@ public class Todo {
     private Long id;
 
     @JsonProperty
-    @NotNull
-    @Column(name = "todo_name")
+    @Column(name = "todo_name", nullable = false, unique = true)
     private String todoName;
 
     @JsonProperty(value = "isDone")
