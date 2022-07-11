@@ -117,4 +117,14 @@ public class TodoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":true}"));
     }
+
+    @Test
+    @Order(9)
+    void shouldThrowErrorWhenTodoDoesNotExistWhenUpdating() throws Exception {
+        mockMvc.perform(patch("/todos/5")
+                        .with(httpBasic("saran", "saran"))
+                        .contentType("application/json")
+                        .content("{\"isDone\":true}"))
+                .andExpect(status().isNotFound());
+    }
 }
