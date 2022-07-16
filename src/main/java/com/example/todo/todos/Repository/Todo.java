@@ -22,11 +22,21 @@ public class Todo {
     @Column(name = "is_done", columnDefinition = "BIT")
     private boolean isDone;
 
+    @JsonProperty(value = "category")
+    @Column(name = "category", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TodoCategory category = TodoCategory.TODOS;
+
     public Todo() {
     }
 
     public Todo(String todoName) {
         this.todoName = todoName;
+    }
+
+    public Todo(String todoName, TodoCategory category) {
+        this.todoName = todoName;
+        this.category = category;
     }
 
     public Todo(Long id, String todoName, boolean isDone) {
@@ -60,6 +70,14 @@ public class Todo {
         this.isDone = isDone;
     }
 
+    public TodoCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(TodoCategory category) {
+        this.category = category;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,6 +93,6 @@ public class Todo {
 
     @Override
     public String toString() {
-        return "Todo no: " + id + ") " + todoName + "/" + isDone;
+        return "Todo no: " + id + ") " + todoName + "/" + category + "---" + isDone;
     }
 }
