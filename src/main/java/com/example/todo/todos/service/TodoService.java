@@ -14,7 +14,7 @@ import java.util.Optional;
 public class TodoService {
 
     @Autowired
-    private TodoRepository todoRepository;
+    private final TodoRepository todoRepository;
 
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
@@ -38,14 +38,18 @@ public class TodoService {
         }
     }
 
-    public Todo updateTodo(Long todoId, Map<String, Boolean> request) throws TodoNotFoundException {
+    public Todo updateTodo(Long todoId, Map<String, Object> request) throws TodoNotFoundException {
         Optional<Todo> queriedTodo = todoRepository.findById(todoId);
         if (queriedTodo.isEmpty()) throw new TodoNotFoundException();
         Todo todo = queriedTodo.get();
 
         if (request.containsKey("isDone")) {
-            todo.setIsDone(request.get("isDone"));
+            todo.setIsDone((Boolean) request.get("isDone"));
         }
+        if (request.containsKey("description")) {
+            todo.setDescription((String) request.get("description"));
+        }
+
         todoRepository.save(todo);
         return todo;
     }

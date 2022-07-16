@@ -37,15 +37,18 @@ public class Todo {
         this.todoName = todoName;
     }
 
-    public Todo(String todoName, TodoCategory category) {
-        this.todoName = todoName;
-        this.category = category;
-    }
-
     public Todo(Long id, String todoName, boolean isDone) {
         this.id = id;
         this.todoName = todoName;
         this.isDone = isDone;
+    }
+
+    public Todo(Long id, String todoName, boolean isDone, TodoCategory category, String description) {
+        this.id = id;
+        this.todoName = todoName;
+        this.isDone = isDone;
+        this.category = category;
+        this.description = description;
     }
 
     public Long getId() {

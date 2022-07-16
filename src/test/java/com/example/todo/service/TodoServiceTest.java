@@ -2,6 +2,7 @@ package com.example.todo.service;
 
 import com.example.todo.exceptions.TodoNotFoundException;
 import com.example.todo.todos.Repository.Todo;
+import com.example.todo.todos.Repository.TodoCategory;
 import com.example.todo.todos.Repository.TodoRepository;
 import com.example.todo.todos.service.TodoService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class TodoServiceTest {
@@ -78,10 +78,10 @@ public class TodoServiceTest {
 
     @Test
     void shouldUpdateIsDoneForTodo() throws TodoNotFoundException {
-        HashMap<String, Boolean> testRequest = new HashMap<>();
+        HashMap<String, Object> testRequest = new HashMap<>();
         testRequest.put("isDone", true);
         Todo testTodo = new Todo(1L, "Todo1", false);
-        Todo updatedTodo = new Todo(1L, "Todo1", false);
+        Todo updatedTodo = new Todo(1L, "Todo1", true);
 
         when(todoRepository.findById(1L)).thenReturn(Optional.of(testTodo));
         when(todoRepository.save(updatedTodo)).thenReturn(updatedTodo);
@@ -95,7 +95,7 @@ public class TodoServiceTest {
 
     @Test
     void shouldThrowErrorWhenTodoIdDoesNotExist() {
-        HashMap<String, Boolean> testRequest = new HashMap<>();
+        HashMap<String, Object> testRequest = new HashMap<>();
 
         when(todoRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -104,5 +104,22 @@ public class TodoServiceTest {
         verify(todoRepository, times(1)).findById(1L);
         verify(todoRepository, times(0)).save(any(Todo.class));
 
+    }
+
+    @Test
+    void shouldUpdateDescriptionForTodo() throws TodoNotFoundException {
+        HashMap<String, Object> testRequest = new HashMap<>();
+        testRequest.put("description", "Test description");
+        Todo testTodo = new Todo(1L, "Todo1", false);
+        Todo updatedTodo = new Todo(1L, "Todo1", false, TodoCategory.TODOS, "Test description");
+
+        when(todoRepository.findById(1L)).thenReturn(Optional.of(testTodo));
+        when(todoRepository.save(updatedTodo)).thenReturn(updatedTodo);
+
+        todoService.updateTodo(1L, testRequest);
+
+        assertEquals(testTodo.getDescription(), "Test description");
+        verify(todoRepository, times(1)).findById(1L);
+        verify(todoRepository, times(1)).save(updatedTodo);
     }
 }

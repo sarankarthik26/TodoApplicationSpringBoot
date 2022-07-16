@@ -49,7 +49,7 @@ public class TodoController {
     }
 
     @PatchMapping("/todos/{todoId}")
-    Todo updateTodoUsingTodoId(@PathVariable int todoId, @RequestBody Map<String, Boolean> request) throws TodoNotFoundException {
+    Todo updateTodoUsingTodoId(@PathVariable int todoId, @RequestBody Map<String, Object> request) throws TodoNotFoundException {
         return todoService.updateTodo((long) todoId, request);
     }
 

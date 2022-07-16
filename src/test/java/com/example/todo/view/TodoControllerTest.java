@@ -56,8 +56,7 @@ public class TodoControllerTest {
                         .with(httpBasic("saran", "saran")))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
-                        "[{\"id\":1,\"todoName\":\"TestTodo-1\",\"isDone\":false}," +
-                                "{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":false}]"));
+                        "[{\"id\":1,\"todoName\":\"TestTodo-1\",\"isDone\":false,\"category\":\"TODOS\",\"description\":null},{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":false,\"category\":\"TODOS\",\"description\":null}]"));
     }
 
     @Test
@@ -79,7 +78,7 @@ public class TodoControllerTest {
         mockMvc.perform(get("/todos/1")
                         .with(httpBasic("saran", "saran")))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"todoName\":\"TestTodo-1\",\"isDone\":false}"));
+                .andExpect(content().json("{\"id\":1,\"todoName\":\"TestTodo-1\",\"isDone\":false,\"category\":\"TODOS\",\"description\":null}"));
     }
 
     @Test
@@ -115,7 +114,7 @@ public class TodoControllerTest {
                         .contentType("application/json")
                         .content("{\"isDone\":true}"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":true}"));
+                .andExpect(content().json("{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":true,\"category\":\"TODOS\",\"description\":null}"));
     }
 
     @Test
@@ -126,5 +125,16 @@ public class TodoControllerTest {
                         .contentType("application/json")
                         .content("{\"isDone\":true}"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(10)
+    void shouldUpdateTodoDescUsingID() throws Exception {
+        mockMvc.perform(patch("/todos/2")
+                        .with(httpBasic("saran", "saran"))
+                        .contentType("application/json")
+                        .content("{\"isDone\":false, \"description\":\"Description for todo 1\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":false,\"category\":\"TODOS\",\"description\":\"Description for todo 1\"}"));
     }
 }
