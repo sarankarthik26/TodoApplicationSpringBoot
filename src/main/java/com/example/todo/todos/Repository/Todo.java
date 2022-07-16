@@ -27,7 +27,6 @@ public class Todo {
 
     public Todo(String todoName) {
         this.todoName = todoName;
-        this.isDone = false;
     }
 
     public Todo(Long id, String todoName, boolean isDone) {
