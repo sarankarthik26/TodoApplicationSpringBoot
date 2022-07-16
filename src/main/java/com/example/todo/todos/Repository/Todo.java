@@ -27,6 +27,9 @@ public class Todo {
     @Enumerated(EnumType.STRING)
     private TodoCategory category = TodoCategory.TODOS;
 
+    @JsonProperty(value="description")
+    private String description;
+
     public Todo() {
     }
 
@@ -76,6 +79,14 @@ public class Todo {
 
     public void setCategory(TodoCategory category) {
         this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
