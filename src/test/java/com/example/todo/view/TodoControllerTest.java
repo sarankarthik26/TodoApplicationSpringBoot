@@ -73,6 +73,16 @@ public class TodoControllerTest {
     }
 
     @Test
+    void shouldNotAddTodoWhenAlreadyExistsForPostRequest() throws Exception {
+        mockMvc.perform(post("/todos")
+                        .with(httpBasic("saran", "saran"))
+                        .contentType("application/json")
+                        .content("{\"todoName\":\"TestTodo-1\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(content().json("{\"message\":\"Todo already exists for the given name. Check your todos or try with another name\",\"details\":[]}"));
+    }
+
+    @Test
     @Order(4)
     void shouldGetTodoUsingItsId() throws Exception {
         mockMvc.perform(get("/todos/1")

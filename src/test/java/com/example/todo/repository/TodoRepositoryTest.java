@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -94,5 +93,11 @@ public class TodoRepositoryTest {
         assertTrue(todoAfterUpdating.isDone());
         assertThat(todoRepository.findAll().size()).isEqualTo(2);
 
+    }
+
+    @Test
+    void shouldGetTodoUsingTodoName() {
+        String testTodoName = testTodo2.getTodoName();
+        assertEquals(todoRepository.findByTodoName(testTodoName).get(), testTodo2);
     }
 }

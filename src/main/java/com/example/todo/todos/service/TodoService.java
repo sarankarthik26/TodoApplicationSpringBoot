@@ -1,5 +1,6 @@
 package com.example.todo.todos.service;
 
+import com.example.todo.exceptions.TodoAlreadyExistsException;
 import com.example.todo.exceptions.TodoNotFoundException;
 import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.Repository.TodoRepository;
@@ -24,7 +25,12 @@ public class TodoService {
         return todoRepository.findAll();
     }
 
-    public Todo addTodo(Todo todoToBeAdded) {
+    public Todo addTodo(Todo todoToBeAdded) throws TodoAlreadyExistsException {
+        Optional<Todo> todoFromId = todoRepository.findByTodoName(todoToBeAdded.getTodoName());
+        if(todoFromId.isPresent()){
+            throw new TodoAlreadyExistsException();
+
+        }
         return todoRepository.save(todoToBeAdded);
     }
 

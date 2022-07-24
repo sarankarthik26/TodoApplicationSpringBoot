@@ -1,5 +1,6 @@
 package com.example.todo.todos.view;
 
+import com.example.todo.exceptions.TodoAlreadyExistsException;
 import com.example.todo.exceptions.TodoNotFoundException;
 import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.service.TodoService;
@@ -32,7 +33,7 @@ public class TodoController {
     }
 
     @PostMapping("/todos")
-    Todo addTodo(@RequestBody Todo todoToBeAdded) {
+    Todo addTodo(@RequestBody Todo todoToBeAdded) throws TodoAlreadyExistsException {
         return todoService.addTodo(todoToBeAdded);
     }
 

@@ -1,5 +1,6 @@
 package com.example.todo.service;
 
+import com.example.todo.exceptions.TodoAlreadyExistsException;
 import com.example.todo.exceptions.TodoNotFoundException;
 import com.example.todo.todos.Repository.Todo;
 import com.example.todo.todos.Repository.TodoCategory;
@@ -38,12 +39,25 @@ public class TodoServiceTest {
     }
 
     @Test
-    void shouldAddTodoIntoTheRepo() {
+    void shouldAddTodoIntoTheRepo() throws TodoAlreadyExistsException {
         Todo testTodo = new Todo(1L, "Todo1", false);
         when(todoRepository.save(testTodo)).thenReturn(testTodo);
+        when(todoRepository.findByTodoName(any(String.class))).thenReturn(Optional.empty());
 
         assertThat(todoService.addTodo(testTodo)).isEqualTo(testTodo);
         verify(todoRepository, times(1)).save(testTodo);
+        verify(todoRepository, times(1)).findByTodoName(any(String.class));
+    }
+
+    @Test
+    void shouldThrowErrorWhenTodoToBeAddedAlreadyExists() throws TodoAlreadyExistsException {
+        Todo testTodo = new Todo(1L, "Todo1", false);
+        when(todoRepository.save(testTodo)).thenReturn(testTodo);
+        when(todoRepository.findByTodoName("Todo1")).thenReturn(Optional.of(testTodo));
+
+        assertThrows(TodoAlreadyExistsException.class, () -> todoService.addTodo(testTodo));
+        verify(todoRepository, times(0)).save(testTodo);
+        verify(todoRepository, times(1)).findByTodoName("Todo1");
     }
 
     @Test
