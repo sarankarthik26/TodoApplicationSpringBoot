@@ -3,6 +3,6 @@ CREATE TABLE TODO (
     TODO_NAME VARCHAR(100) NOT NULL,
     IS_DONE BIT NOT NULL,
     category ENUM('TODOS', 'SHOPPING', 'PROJECT'),
-    description VARCHAR(250),
+    description TEXT,
     PRIMARY KEY (ID)
 );

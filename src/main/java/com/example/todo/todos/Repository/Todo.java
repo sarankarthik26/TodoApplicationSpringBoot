@@ -27,7 +27,8 @@ public class Todo {
     @Enumerated(EnumType.STRING)
     private TodoCategory category = TodoCategory.TODOS;
 
-    @JsonProperty(value="description")
+    @JsonProperty(value = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     public Todo() {
