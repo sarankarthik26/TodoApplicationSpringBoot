@@ -34,8 +34,28 @@ public class TodoServiceTest {
         Todo todo2 = new Todo(2L, "Todo2", true);
         when(todoRepository.findAll()).thenReturn(List.of(todo1, todo2));
 
-        assertThat(todoService.getAllTodos()).isEqualTo(List.of(todo1, todo2));
+        assertThat(todoService.getAllTodos(null)).isEqualTo(List.of(todo1, todo2));
         verify(todoRepository, times(1)).findAll();
+    }
+
+    @Test
+    void shouldDisplayAllTheTodosThatHaveDone() {
+        Todo todo1 = new Todo(1L, "Todo1", true);
+        Todo todo2 = new Todo(2L, "Todo2", true);
+        when(todoRepository.findByIsDoneTrue()).thenReturn(List.of(todo1, todo2));
+
+        assertThat(todoService.getAllTodos("true")).isEqualTo(List.of(todo1, todo2));
+        verify(todoRepository, times(1)).findByIsDoneTrue();
+    }
+
+    @Test
+    void shouldDisplayAllTheTodosThatAreToBeDone() {
+        Todo todo1 = new Todo(1L, "Todo1", false);
+        Todo todo2 = new Todo(2L, "Todo2", false);
+        when(todoRepository.findByIsDoneFalse()).thenReturn(List.of(todo1, todo2));
+
+        assertThat(todoService.getAllTodos("false")).isEqualTo(List.of(todo1, todo2));
+        verify(todoRepository, times(1)).findByIsDoneFalse();
     }
 
     @Test

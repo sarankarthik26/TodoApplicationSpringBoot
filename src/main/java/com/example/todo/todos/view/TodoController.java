@@ -28,8 +28,8 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    List<Todo> getTodos() {
-        return todoService.getAllTodos();
+    List<Todo> getTodos(@RequestParam(required = false, name = "isDone") String isDone) {
+        return todoService.getAllTodos(isDone);
     }
 
     @PostMapping("/todos")

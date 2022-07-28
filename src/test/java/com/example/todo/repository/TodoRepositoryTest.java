@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -99,5 +100,15 @@ public class TodoRepositoryTest {
     void shouldGetTodoUsingTodoName() {
         String testTodoName = testTodo2.getTodoName();
         assertEquals(todoRepository.findByTodoName(testTodoName).get(), testTodo2);
+    }
+
+    @Test
+    void shouldGetTodoThatAreDone() {
+        assertEquals(todoRepository.findByIsDoneTrue(), emptyList());
+    }
+
+    @Test
+    void shouldGetTodoThatAreNotDone() {
+        assertEquals(todoRepository.findByIsDoneFalse(), List.of(testTodo1, testTodo2));
     }
 }

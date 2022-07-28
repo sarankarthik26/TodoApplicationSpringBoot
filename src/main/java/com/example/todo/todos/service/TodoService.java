@@ -21,13 +21,20 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    public List<Todo> getAllTodos() {
+    public List<Todo> getAllTodos(String isDone) {
+        if (isDone != null) {
+            return switch (isDone) {
+                case "true" -> todoRepository.findByIsDoneTrue();
+                case "false" -> todoRepository.findByIsDoneFalse();
+                default -> todoRepository.findAll();
+            };
+        }
         return todoRepository.findAll();
     }
 
     public Todo addTodo(Todo todoToBeAdded) throws TodoAlreadyExistsException {
         Optional<Todo> todoFromId = todoRepository.findByTodoName(todoToBeAdded.getTodoName());
-        if(todoFromId.isPresent()){
+        if (todoFromId.isPresent()) {
             throw new TodoAlreadyExistsException();
 
         }

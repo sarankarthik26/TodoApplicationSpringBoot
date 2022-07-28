@@ -60,6 +60,24 @@ public class TodoControllerTest {
     }
 
     @Test
+    void shouldReturnAllTodosThatAreDone() throws Exception {
+        mockMvc.perform(get("/todos")
+                        .param("isDone", "true")
+                        .with(httpBasic("saran", "saran")))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void shouldReturnAllTodosThatAreNotDone() throws Exception {
+        mockMvc.perform(get("/todos")
+                        .param("isDone", "false")
+                        .with(httpBasic("saran", "saran")))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"id\":1,\"todoName\":\"TestTodo-1\",\"isDone\":false,\"category\":\"TODOS\",\"description\":null},{\"id\":2,\"todoName\":\"TestTodo-2\",\"isDone\":false,\"category\":\"TODOS\",\"description\":\"Description for todo 1\"}]"));
+    }
+
+    @Test
     @Order(3)
     void shouldAddTodoForPostRequest() throws Exception {
         mockMvc.perform(post("/todos")
