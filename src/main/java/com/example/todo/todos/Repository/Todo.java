@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "Todos")
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +20,7 @@ public class Todo {
 
     @JsonProperty(value = "isDone")
     @NotNull
-    @Column(name = "is_done", columnDefinition = "BIT")
+    @Column(name = "is_done", columnDefinition = "Boolean DEFAULT false")
     private boolean isDone;
 
     @JsonProperty(value = "category")
